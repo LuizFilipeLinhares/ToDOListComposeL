@@ -2,11 +2,13 @@ package br.edu.satc.todolistcompose
 
 import androidx.room.ColumnInfo
 import androidx.room.Dao
+import androidx.room.Database
 import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RoomDatabase
 import androidx.room.Update
 
 @Entity
@@ -18,25 +20,23 @@ data class TaskData (
 )
 
 @Dao
-interface UserDao {
-    @Query("SELECT * FROM user")
-    fun getAll(): List<User>
+interface TaskDao {
+    @Query("SELECT * FROM taskdata")
+    fun getAll(): List<TaskData>
 
-    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<User>
-
-    @Query(
-        "SELECT * FROM user WHERE user_name LIKE :first AND " +
-                "user_phone LIKE :last LIMIT 1"
-    )
-    fun findByName(first: String, last: String): User
+    fun findByName(first: String, last: String): TaskData
 
     @Update
-    fun updateAll(vararg users: User)
+    fun updateAll(vararg users: TaskData)
 
     @Insert
-    fun insertAll(vararg users: User)
+    fun insertAll(vararg users: TaskData)
 
-    @Delete
-    fun delete(user: User)
+    //@Delete
+    //fun delete(user: User)
+}
+
+@Database(entities = [TaskData::class], version = 1)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun userDao(): UserDao
 }
